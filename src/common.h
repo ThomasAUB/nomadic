@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 
 #include <string>
+#include <stdint.h>
 
 struct SDL_Window;
 
