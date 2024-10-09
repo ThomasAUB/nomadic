@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.22)
 project(NOMADIC)
 
 set(OpenGL_GL_PREFERENCE "GLVND")
@@ -13,7 +13,7 @@ include(cmake/BuildTypes.cmake)
 
 if (EMSCRIPTEN)
     option(NOMADIC_WASM_SINGLE_FILE "Embed WASM inside the generated .js" ON)
-else()
+else() 
     if (MINGW)
         set(BUILD_SHARED_LIBS_DEFAULT OFF)
     else()
@@ -49,8 +49,26 @@ endif()
 
 # dependencies
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+# Update submodules as needed
+option(GIT_SUBMODULE "Check submodules during build" ON)
+if(GIT_SUBMODULE)
+        message(STATUS "Submodule update")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init --recursive failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+        endif()
+    endif()
+endif()
+
+
 
 if (EMSCRIPTEN)
     set(CMAKE_CXX_FLAGS " \
@@ -64,8 +82,10 @@ if (EMSCRIPTEN)
     -s NO_EXIT_RUNTIME=0 \
     ")
 else()
+
     find_package(SDL2 REQUIRED)
     string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
+
 endif()
 
 add_subdirectory(third-party)
