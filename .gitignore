@@ -7,4 +7,19 @@ compile_commands.json
 
 CMakeFiles/
 
-third-party/
+third-party/imgui/imgui
+third-party/sdl
+
+third-party/cmake_install.cmake
+third-party/CTestTestfile.cmake
+
+build.ninja
+
+bin/
+
+src/cmake_install.cmake
+src/CTestTestfile.cmake
+
+cmake_install.cmake
+CMakeCache.txt
+CTestTestfile.cmake
